@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GoodDyno — 클라이밍, 기록하고 연결하다</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #080808;
+      --bg-2: #111111;
+      --bg-3: #1a1a1a;
+      --orange: #FF4500;
+      --lime: #C8FF00;
+      --chalk: #F0EDE8;
+      --chalk-dim: #999590;
+      --border: #222222;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Noto Sans KR', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--chalk);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* ─── GRAIN OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 48px;
+      background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+      backdrop-filter: blur(2px);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: 0.15em;
+      color: var(--chalk);
+    }
+
+    .nav-logo span { color: var(--orange); }
+
+    .nav-cta {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--lime);
+      padding: 10px 20px;
+      text-decoration: none;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .nav-cta:hover { background: var(--chalk); transform: translateY(-1px); }
+
+    /* ─── NAV MASCOT ─── */
+    .nav-mascot {
+      height: 48px;
+      width: 48px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+      flex-shrink: 0;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    /* ─── AI MASCOT ─── */
+    .ai-intro {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 64px;
+    }
+
+    .ai-mascot-wrap {
+      flex-shrink: 0;
+      width: clamp(200px, 22vw, 340px);
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: opacity 0.9s 0.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .ai-mascot-wrap.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .ai-mascot-wrap img {
+      width: 100%;
+      display: block;
+    }
+
+    @media (max-width: 900px) {
+      .ai-intro { grid-template-columns: 1fr; }
+      .ai-mascot-wrap { width: clamp(140px, 50vw, 220px); justify-self: center; }
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-display);
+      font-size: clamp(12rem, 25vw, 28rem);
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,69,0,0.08);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      user-select: none;
+      pointer-events: none;
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from { transform: translate(-50%, -50%) scale(1); }
+      to { transform: translate(-48%, -52%) scale(1.02); }
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 10vw, 11rem);
+      line-height: 0.9;
+      letter-spacing: -0.01em;
+      color: var(--chalk);
+      max-width: 900px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s forwards;
+    }
+
+    .hero-headline em {
+      font-style: normal;
+      color: var(--orange);
+      -webkit-text-stroke: 0;
+    }
+
+    .hero-sub {
+      margin-top: 32px;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--chalk-dim);
+      max-width: 480px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.6s forwards;
+    }
+
+    .hero-actions {
+      margin-top: 48px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.8s forwards;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--orange);
+      padding: 16px 36px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      position: relative;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--orange);
+      transform: translate(4px, 4px);
+      transition: transform 0.15s;
+    }
+    .btn-primary:hover { transform: translate(-2px, -2px); }
+    .btn-primary:hover::after { transform: translate(6px, 6px); }
+
+    .btn-secondary {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--chalk-dim);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .btn-secondary:hover { color: var(--chalk); border-color: var(--chalk-dim); }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      right: 48px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--chalk-dim);
+      writing-mode: vertical-rl;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeIn 1s 1.4s forwards;
+    }
+    .hero-scroll-hint::before {
+      content: '';
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--orange), transparent);
+      animation: extend 2s 1.5s ease-out forwards;
+    }
+    @keyframes extend {
+      from { height: 0; }
+      to { height: 60px; }
+    }
+
+    .hero-stats {
+      position: absolute;
+      top: 50%;
+      right: 48px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      opacity: 0;
+      animation: fadeIn 1s 1s forwards;
+    }
+
+    .hero-stat-item {
+      text-align: right;
+    }
+    .hero-stat-num {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      color: var(--lime);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--chalk-dim);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ─── SECTION BASE ─── */
+    section {
+      padding: 120px 48px;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::after {
+      content: '';
+      height: 1px;
+      width: 40px;
+      background: var(--orange);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 6rem);
+      line-height: 0.95;
+      letter-spacing: 0.01em;
+      color: var(--chalk);
+      max-width: 700px;
+    }
+
+    /* ─── PAIN POINTS ─── */
+    #pain {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 64px;
+    }
+
+    .pain-card {
+      background: var(--bg-3);
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .pain-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--orange);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .pain-card:hover { background: #1e1e1e; }
+    .pain-card:hover::before { transform: scaleX(1); }
+
+    .pain-num {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      color: rgba(255,69,0,0.08);
+      line-height: 1;
+      margin-bottom: 24px;
+      transition: color 0.3s;
+    }
+    .pain-card:hover .pain-num { color: rgba(255,69,0,0.15); }
+
+    .pain-icon {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .pain-title {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--chalk);
+      margin-bottom: 12px;
+    }
+
+    .pain-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--chalk-dim);
+      line-height: 1.7;
+    }
+
+    /* ─── FEATURES ─── */
+    #features {
+      border-top: 1px solid var(--border);
+    }
+
+    .features-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 80px;
+    }
+
+    .features-sticky {
+      position: sticky;
+      top: 120px;
+    }
+
+    .feature-item {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: default;
+      transition: padding-left 0.3s;
+    }
+    .feature-item:hover { padding-left: 16px; }
+    .feature-item:first-child { border-top: 1px solid var(--border); }
+
+    .feature-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 12px;
+    }
+
+    .feature-name {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--chalk);
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    .feature-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--chalk-dim);
+      line-height: 1.7;
+    }
+
+    /* ─── MOCK UI ─── */
+    .mock-phone {
+      width: 280px;
+      height: 560px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 36px;
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    .mock-phone::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 6px;
+      background: var(--bg-2);
+      border-radius: 3px;
+      z-index: 2;
+    }
+
+    .mock-screen {
+      padding: 40px 16px 16px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mock-bar {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--chalk-dim);
+      letter-spacing: 0.1em;
+      padding: 0 4px 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .mock-video-card {
+      background: var(--bg-2);
+      border-radius: 12px;
+      overflow: hidden;
+      flex: 1;
+      position: relative;
+    }
+
+    .mock-video-thumb {
+      width: 100%;
+      height: 70%;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a1a0a 50%, #1a1a1a 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mock-play {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,69,0,0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .mock-video-info {
+      padding: 10px 12px;
+    }
+
+    .mock-difficulty {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      background: var(--orange);
+      color: var(--bg);
+      padding: 2px 6px;
+      border-radius: 2px;
+      margin-bottom: 4px;
+    }
+
+    .mock-title {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--chalk);
+    }
+
+    .mock-meta {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--chalk-dim);
+      margin-top: 2px;
+    }
+
+    .mock-card-sm {
+      background: var(--bg-2);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mock-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), #ff8c00);
+      flex-shrink: 0;
+    }
+
+    .mock-text-sm {
+      font-size: 0.65rem;
+      color: var(--chalk);
+    }
+    .mock-text-xs {
+      font-size: 0.55rem;
+      color: var(--chalk-dim);
+      font-family: var(--font-mono);
+    }
+
+    /* ─── COMPARE ─── */
+    #compare {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+    }
+
+    .compare-table {
+      width: 100%;
+      margin-top: 64px;
+      border-collapse: collapse;
+    }
+
+    .compare-table th {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 0.05em;
+      padding: 20px 28px;
+      text-align: center;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .compare-table th.soma-col {
+      background: rgba(255,69,0,0.06);
+      border-bottom-color: var(--orange);
+      color: var(--orange);
+    }
+
+    .compare-table td {
+      padding: 20px 28px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--chalk-dim);
+    }
+
+    .compare-table td:first-child {
+      text-align: left;
+      font-weight: 500;
+      color: var(--chalk);
+    }
+
+    .compare-table td.soma-col { background: rgba(255,69,0,0.03); }
+
+    .check { color: var(--lime); font-size: 1.1rem; }
+    .cross { color: #444; font-size: 1.1rem; }
+    .partial { color: #888; font-size: 0.8rem; }
+
+    /* ─── AI ─── */
+    #ai {
+      border-top: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .ai-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 64px;
+    }
+
+    .ai-card {
+      background: var(--bg-3);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .ai-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 100% 100%, rgba(200,255,0,0.05), transparent 70%);
+      transition: all 0.4s;
+    }
+    .ai-card:hover { background: #1c1c1c; }
+    .ai-card:hover::after { width: 200px; height: 200px; }
+
+    .ai-card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .ai-card-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--chalk);
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    .ai-card-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--chalk-dim);
+      line-height: 1.7;
+    }
+
+    .ai-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--lime);
+      border: 1px solid rgba(200,255,0,0.3);
+      padding: 4px 10px;
+      border-radius: 2px;
+      margin-top: 20px;
+    }
+
+    /* ─── FINAL CTA ─── */
+    #cta {
+      text-align: center;
+      padding: 160px 48px;
+      border-top: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cta::before {
+      content: 'DYNO';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-display);
+      font-size: clamp(12rem, 28vw, 32rem);
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,69,0,0.05);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cta-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 24px;
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 8vw, 9rem);
+      line-height: 0.9;
+      color: var(--chalk);
+      margin-bottom: 24px;
+    }
+
+    .cta-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--chalk-dim);
+      margin-bottom: 48px;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 0;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .cta-input {
+      flex: 1;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-right: none;
+      color: var(--chalk);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 16px 20px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .cta-input::placeholder { color: #444; }
+    .cta-input:focus { border-color: var(--orange); }
+
+    .cta-submit {
+      background: var(--orange);
+      color: var(--bg);
+      border: none;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 16px 28px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .cta-submit:hover { background: #ff6020; transform: translateY(-1px); }
+    .cta-submit:active { transform: translateY(0); }
+
+    .cta-note {
+      margin-top: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: #444;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.2em;
+      color: var(--chalk);
+    }
+    .footer-logo span { color: var(--orange); }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: #444;
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── DIVIDER ─── */
+    .divider-line {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, var(--orange), transparent);
+      margin: 0;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      section { padding: 80px 24px; }
+      #hero { padding: 0 24px 64px; }
+
+      .hero-stats { display: none; }
+      .hero-scroll-hint { display: none; }
+      .hero-headline { font-size: clamp(3.5rem, 14vw, 6rem); }
+      .nav-mascot { height: 36px; width: 36px; }
+
+      .pain-grid { grid-template-columns: 1fr; }
+      .features-layout { grid-template-columns: 1fr; gap: 40px; }
+      .features-sticky { position: static; }
+      .mock-phone { display: none; }
+
+      .compare-table th, .compare-table td { padding: 14px 16px; font-size: 0.8rem; }
+      .compare-table th { font-size: 1.1rem; }
+
+      .ai-grid { grid-template-columns: 1fr; }
+
+      #cta { padding: 100px 24px; }
+      .cta-form { flex-direction: column; }
+      .cta-input { border-right: 1px solid var(--border); border-bottom: none; }
+
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-brand">
+      <img src="dyno-mascot.png" alt="GoodDyno 마스코트" class="nav-mascot" />
+      <span class="nav-logo">Good<span>Dy</span>no</span>
+    </a>
+    <a href="#cta" class="nav-cta">사전등록</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg-text" aria-hidden="true">CLIMB</div>
+
+    <div class="hero-stats" aria-hidden="true">
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">2,400+</div>
+        <div class="hero-stat-label">등록된 암장</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">8단계</div>
+        <div class="hero-stat-label">난이도 체계</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">AI</div>
+        <div class="hero-stat-label">자세분석</div>
+      </div>
+    </div>
+
+    <div class="hero-eyebrow">클라이밍 커뮤니티 플랫폼</div>
+
+    <h1 class="hero-headline">
+      풀었다.<br />
+      <em>찍었다.</em><br />
+      연결됐다.
+    </h1>
+
+    <p class="hero-sub">
+      같은 문제를 푼 사람들과 연결하고,<br />
+      내 성장을 데이터로 기록하세요.<br />
+      영상 하나로 시작하는 클라이밍 커뮤니티.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">사전등록 하기</a>
+      <a href="#features" class="btn-secondary">더 알아보기 →</a>
+    </div>
+
+    <div class="hero-scroll-hint" aria-hidden="true">스크롤</div>
+  </section>
+
+  <div class="divider-line"></div>
+
+  <!-- PAIN POINTS -->
+  <section id="pain">
+    <div class="section-label reveal">문제 인식</div>
+    <h2 class="section-title reveal reveal-delay-1">클라이머라면<br />다 공감할 것</h2>
+
+    <div class="pain-grid">
+      <div class="pain-card reveal reveal-delay-1">
+        <div class="pain-num">01</div>
+        <span class="pain-icon">📱</span>
+        <div class="pain-title">공유가 인스타 부계로 흩어진다</div>
+        <p class="pain-desc">영상은 찍는데 올릴 곳이 없어서 인스타 부계에 조용히 올리거나, 그냥 삭제한다.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-2">
+        <div class="pain-num">02</div>
+        <span class="pain-icon">🔍</span>
+        <div class="pain-title">같은 문제를 푼 사람을 못 찾는다</div>
+        <p class="pain-desc">막히는 구간이 있어도 비슷한 체형, 비슷한 실력의 사람 영상을 찾기가 너무 어렵다.</p>
+      </div>
+      <div class="pain-card reveal reveal-delay-3">
+        <div class="pain-num">03</div>
+        <span class="pain-icon">🧗</span>
+        <div class="pain-title">고난이도 정답 자세를 찾기 어렵다</div>
+        <p class="pain-desc">암장 계정을 일일이 팔로우하거나, 해시태그 검색을 반복해도 원하는 정보가 잘 없다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-label reveal">핵심 기능</div>
+    <h2 class="section-title reveal reveal-delay-1">기록하고<br />연결하고<br />성장하다</h2>
+
+    <div class="features-layout">
+      <div>
+        <div class="feature-item reveal reveal-delay-1">
+          <div class="feature-tag">Feature 01</div>
+          <div class="feature-name">영상 피드</div>
+          <p class="feature-desc">같은 암장, 같은 문제를 푼 사람들의 영상만 모아서 보여줍니다. 나와 비슷한 레벨의 풀이 방식을 한눈에 비교하세요.</p>
+        </div>
+
+        <div class="feature-item reveal reveal-delay-2">
+          <div class="feature-tag">Feature 02</div>
+          <div class="feature-name">개인 기록</div>
+          <p class="feature-desc">난이도별 풀이 추이, 암장별 필터링 뷰. 내 클라이밍 히스토리가 자동으로 쌓이고 정리됩니다.</p>
+        </div>
+
+        <div class="feature-item reveal reveal-delay-3">
+          <div class="feature-tag">Feature 03</div>
+          <div class="feature-name">커뮤니티</div>
+          <p class="feature-desc">같은 문제에서 만난 클라이머를 팔로우하고, 오늘의 TOP 3 빠른 해결자를 확인하세요.</p>
+        </div>
+
+        <div class="feature-item reveal reveal-delay-4">
+          <div class="feature-tag">Feature 04</div>
+          <div class="feature-name">레벨 시스템</div>
+          <p class="feature-desc">뱃지, 티어, 성장 통계. 클라이밍 실력이 데이터로 눈에 보이기 시작합니다.</p>
+        </div>
+      </div>
+
+      <div class="features-sticky reveal reveal-delay-2">
+        <div class="mock-phone">
+          <div class="mock-screen">
+            <div class="mock-bar">
+              <span>GoodDyno</span>
+              <span>홍대 클라이밍</span>
+            </div>
+            <div class="mock-video-card">
+              <div class="mock-video-thumb">
+                <div class="mock-play">▶</div>
+              </div>
+              <div class="mock-video-info">
+                <span class="mock-difficulty">V5 · 파랑</span>
+                <div class="mock-title">언더컷 잡고 히일훅 시퀀스</div>
+                <div class="mock-meta">홍대점 3번 벽 · 2분 전</div>
+              </div>
+            </div>
+            <div class="mock-card-sm">
+              <div class="mock-avatar"></div>
+              <div>
+                <div class="mock-text-sm">근호님도 이 문제 풀었어요</div>
+                <div class="mock-text-xs">같은 문제 · 3명 · 영상 보기 →</div>
+              </div>
+            </div>
+            <div class="mock-card-sm" style="background: rgba(200,255,0,0.05); border: 1px solid rgba(200,255,0,0.15);">
+              <div style="font-size:1.2rem;">🏆</div>
+              <div>
+                <div class="mock-text-sm" style="color: #C8FF00;">오늘의 TOP 3 달성!</div>
+                <div class="mock-text-xs">V5 최단시간 해결</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section id="compare">
+    <div class="section-label reveal">경쟁사 비교</div>
+    <h2 class="section-title reveal reveal-delay-1">GoodDyno만이<br />다 가졌다</h2>
+
+    <table class="compare-table reveal reveal-delay-2">
+      <thead>
+        <tr>
+          <th style="text-align:left; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; color: var(--chalk-dim);">기능</th>
+          <th>오클고</th>
+          <th>인스타그램</th>
+          <th>ClimbX</th>
+          <th class="soma-col">GoodDyno</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>영상 중심 기록</td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="partial">△ 구조화 없음</span></td>
+          <td><span class="check">✓</span></td>
+          <td class="soma-col"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>난이도/암장 데이터화</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="partial">△ 부분</span></td>
+          <td class="soma-col"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>같은 문제 풀이 연결</td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="partial">△ 제한적</span></td>
+          <td class="soma-col"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>커뮤니티 / 팔로우</td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✕</span></td>
+          <td class="soma-col"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>AI 자세 분석</td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="cross">✕</span></td>
+          <td class="soma-col"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>성장 통계 / 레벨</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="cross">✕</span></td>
+          <td class="soma-col"><span class="check">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- AI -->
+  <section id="ai">
+    <div class="ai-intro">
+      <div>
+        <div class="section-label reveal">AI 기능</div>
+        <h2 class="section-title reveal reveal-delay-1">AI가<br />코치가 된다</h2>
+      </div>
+      <div class="ai-mascot-wrap reveal">
+        <img src="dyno-mascot.png" alt="GoodDyno AI 코치" />
+      </div>
+    </div>
+
+    <div class="ai-grid">
+      <div class="ai-card reveal reveal-delay-1">
+        <span class="ai-card-icon">🎯</span>
+        <div class="ai-card-title">자세 분석 피드백</div>
+        <p class="ai-card-desc">영상을 업로드하면 AI가 동작을 분석해 자세와 무게중심에 대한 구체적인 피드백을 제공합니다.</p>
+        <span class="ai-badge">Beta</span>
+      </div>
+      <div class="ai-card reveal reveal-delay-2">
+        <span class="ai-card-icon">🔮</span>
+        <div class="ai-card-title">유사 문제 추천</div>
+        <p class="ai-card-desc">풀이 스타일과 난이도를 분석해 성장에 최적화된 다음 문제를 추천합니다.</p>
+        <span class="ai-badge">Coming</span>
+      </div>
+      <div class="ai-card reveal reveal-delay-3">
+        <span class="ai-card-icon">🏷️</span>
+        <div class="ai-card-title">자동 난이도 태깅</div>
+        <p class="ai-card-desc">영상을 올리면 AI가 홀드 구성과 동작을 분석해 난이도를 자동으로 태깅합니다.</p>
+        <span class="ai-badge">Beta</span>
+      </div>
+      <div class="ai-card reveal reveal-delay-4">
+        <span class="ai-card-icon">✂️</span>
+        <div class="ai-card-title">AI 컷편집</div>
+        <p class="ai-card-desc">긴 영상에서 핵심 순간만 자동으로 편집. 업로드하면 바로 공유 가능한 클립이 완성됩니다.</p>
+        <span class="ai-badge">Coming</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <div class="cta-label">지금 합류하세요</div>
+    <h2 class="cta-title reveal">먼저 경험하는<br />클라이머가<br />되세요</h2>
+    <p class="cta-sub reveal reveal-delay-1">사전등록 시 출시 알림 + 얼리버드 혜택을 드립니다.</p>
+    <form class="cta-form reveal reveal-delay-2" id="signup-form"
+          action="https://formspree.io/f/mqejzoze" method="POST">
+      <input type="hidden" name="_subject" value="GoodDyno 사전등록 🦕" />
+      <input class="cta-input" type="email" name="email" placeholder="이메일 주소 입력" required />
+      <button class="cta-submit" type="submit" id="submit-btn">사전등록</button>
+    </form>
+    <p class="cta-note reveal reveal-delay-3" id="form-msg">스팸 없음 · 언제든지 취소 가능</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Good<span>Dy</span>no</div>
+    <div class="footer-copy">© 2026 GoodDyno Team. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // 제출 후 URL 파라미터로 성공 표시
+    if (new URLSearchParams(location.search).get('submitted') === 'true') {
+      const btn = document.getElementById('submit-btn');
+      const msg = document.getElementById('form-msg');
+      if (btn) { btn.textContent = '등록 완료 ✓'; btn.style.background = 'var(--lime)'; }
+      if (msg) { msg.textContent = '곧 출시 소식 전해드릴게요! 🦕'; msg.style.color = 'var(--lime)'; }
+      document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Parallax on hero bg text
+    const bgText = document.querySelector('.hero-bg-text');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (bgText) bgText.style.transform = `translate(-50%, calc(-50% + ${y * 0.3}px))`;
+    }, { passive: true });
+  </script>
+</body>
+</html>
