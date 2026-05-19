@@ -1,0 +1,6 @@
+{
+  "alias": ["good-dyno.vercel.app"],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
