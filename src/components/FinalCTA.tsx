@@ -49,25 +49,19 @@ export function FinalCTA() {
       className="flex min-h-[calc(100svh-4rem)] flex-col justify-center px-6 py-16"
     >
       <div className="mx-auto w-full max-w-2xl text-center">
-        <div className="bg-card border-line relative overflow-hidden rounded-3xl border p-10 md:p-16">
-          {/* Decorative rings inside card */}
-          <div className="cta-ring border-accent/15 pointer-events-none absolute top-1/2 left-1/2 h-175 w-175 -translate-x-1/2 -translate-y-1/2 rounded-full border" />
-          <div className="cta-ring border-accent/20 pointer-events-none absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full border" />
-          <div className="cta-ring border-accent/25 pointer-events-none absolute top-1/2 left-1/2 h-80 w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full border" />
-          <div className="bg-accent/10 pointer-events-none absolute top-1/2 left-1/2 h-50 w-50 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
-
+        <div className="bg-card shadow-card relative overflow-hidden rounded-3xl p-10 md:p-16">
           <div className="relative">
             {/* Logo */}
             <div className="mb-8 flex items-center justify-center">
-              <span className="text-accent text-2xl font-black tracking-wider">
+              <span className="text-accent text-2xl font-black tracking-wide">
                 LIMBING
               </span>
             </div>
 
-            <h2 className="mb-4 text-3xl font-black tracking-tight md:text-4xl">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
               출시되면 가장 먼저
               <br />
-              <span className="text-accent">알려드릴게요</span>
+              알려드릴게요
             </h2>
             <p className="text-muted mb-8 text-lg leading-relaxed">
               이메일을 남겨주시면 Limbing 출시 소식을
@@ -76,7 +70,7 @@ export function FinalCTA() {
             </p>
 
             {isSubmitted ? (
-              <div className="border-accent/30 bg-accent/10 inline-flex items-center gap-3 rounded-2xl border px-8 py-6">
+              <div className="bg-accent/10 inline-flex items-center gap-3 rounded-2xl px-8 py-6">
                 <CheckCircle className="text-accent h-8 w-8" />
                 <div className="text-left">
                   <p className="font-bold">신청이 완료되었어요!</p>
@@ -87,7 +81,7 @@ export function FinalCTA() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mx-auto max-w-md">
-                <div className="bg-surface border-line flex flex-col gap-3 rounded-2xl border p-2 sm:flex-row sm:items-center">
+                <div className="bg-surface/60 flex flex-col gap-3 rounded-2xl p-2 sm:flex-row sm:items-center">
                   <input
                     type="email"
                     value={email}
@@ -124,6 +118,12 @@ export function FinalCTA() {
         {/* Footer */}
         <div className="text-muted border-line mt-12 border-t pt-8 text-sm">
           <p>Made with care by Good Dyno Team</p>
+          <a
+            href="mailto:gooddynoteam@gmail.com"
+            className="hover:text-ink mt-2 inline-block transition-colors"
+          >
+            gooddynoteam@gmail.com
+          </a>
         </div>
       </div>
     </section>

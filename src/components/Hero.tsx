@@ -6,22 +6,15 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-[calc(100svh-4rem)] flex-col justify-center overflow-hidden px-6 pt-16 pb-16">
-      {/* Background glow */}
-      <div className="bg-accent/5 pointer-events-none absolute top-1/3 left-1/2 h-150 w-150 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
-
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-12 lg:flex-row lg:gap-16">
         {/* Text */}
         <div className="flex-1 pt-4 text-center lg:text-left">
-          <div className="border-accent/30 bg-accent/10 text-accent mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-bold">
-            <span className="relative flex h-2 w-2">
-              <span className="bg-accent absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
-              <span className="bg-accent relative inline-flex h-2 w-2 rounded-full" />
-            </span>
-            베타 테스터 모집중
-          </div>
+          <p className="text-accent mb-4 text-base font-semibold">
+            베타 테스터 모집 중
+          </p>
 
-          <h1 className="mb-6 max-w-xl text-5xl leading-[1.05] font-black tracking-tight text-balance md:text-6xl lg:text-7xl">
-            <span className="text-accent">클라이밍 영상</span>을
+          <h1 className="mb-6 max-w-xl text-5xl leading-[1.08] font-bold tracking-tighter text-balance md:text-6xl lg:text-7xl">
+            클라이밍 영상을
             <br />
             한곳에
           </h1>
