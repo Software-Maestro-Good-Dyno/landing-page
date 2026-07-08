@@ -1,18 +1,9 @@
-import {
-  ArrowRight,
-  Bell,
-  ChevronDown,
-  FlagTriangleRight,
-  Heart,
-  Home,
-  MapPin,
-  MessageCircle,
-  Plus,
-  Search,
-  User,
-} from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export function Hero() {
+  const { theme } = useTheme();
+
   return (
     <section className="relative flex min-h-[calc(100svh-4rem)] flex-col justify-center overflow-hidden px-6 pt-16 pb-16">
       {/* Background glow */}
@@ -58,116 +49,14 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Phone Mockup */}
+        {/* Phone Mockup — 실제 iOS 앱 홈 탭 스크린샷 (iPhone 17 시뮬레이터 캡처) */}
         <div className="flex flex-1 justify-center lg:justify-end">
-          <div className="border-line bg-card relative h-150 w-72.5 overflow-hidden rounded-[44px] border-[6px] shadow-[0_32px_80px_rgba(0,0,0,0.6)]">
-            {/* Notch */}
-            <div className="absolute top-0 z-50 flex h-6 w-full justify-center">
-              <div className="bg-line h-4 w-1/3 rounded-b-2xl" />
-            </div>
-
-            {/* App Header */}
-            <div className="bg-card/95 border-line absolute top-0 right-0 left-0 z-40 flex items-center justify-between border-b px-4 pt-7 pb-1.5 backdrop-blur-md">
-              <span className="text-accent text-base font-black tracking-wider">
-                LIMBING
-              </span>
-              <div className="flex items-center gap-3">
-                <Search className="text-muted h-4 w-4" strokeWidth={2} />
-                <div className="relative">
-                  <Bell className="text-muted h-4 w-4" strokeWidth={2} />
-                  <span className="bg-accent border-card absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full border" />
-                </div>
-              </div>
-            </div>
-
-            {/* Feed */}
-            <div className="h-full overflow-hidden pt-15 pb-12">
-              {/* Post 1 */}
-              <div>
-                <div className="flex items-center justify-between px-3 py-2.5">
-                  <div className="flex items-center gap-2">
-                    <div className="bg-surface border-line flex h-8 w-8 shrink-0 items-center justify-center rounded-full border">
-                      <User className="text-muted h-4 w-4" strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold">김샌드</p>
-                      <p className="text-muted text-[10px]">더클라임 강남</p>
-                    </div>
-                  </div>
-                  <span className="border-accent text-accent rounded-full border px-2.5 py-0.5 text-[10px] font-bold">
-                    팔로우
-                  </span>
-                </div>
-                <div className="relative aspect-4/5">
-                  <img
-                    src="https://images.unsplash.com/photo-1564769662533-4f00a87b4056?auto=format&fit=crop&w=600&q=80"
-                    alt="Climbing"
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm">
-                      <div className="ml-1 h-0 w-0 border-t-[6px] border-b-[6px] border-l-10 border-t-transparent border-b-transparent border-l-white" />
-                    </div>
-                  </div>
-                </div>
-                <div className="px-3 py-2.5">
-                  <div className="mb-2 flex flex-wrap gap-1">
-                    <span className="bg-accent-blue/15 text-accent-blue rounded-full px-2 py-0.5 text-[9px] font-bold">
-                      D섹터
-                    </span>
-                    <span className="bg-accent-lime/15 text-accent-lime rounded-full px-2 py-0.5 text-[9px] font-bold">
-                      V8
-                    </span>
-                    <span className="bg-surface text-muted rounded-full px-2 py-0.5 text-[9px]">
-                      #오버행
-                    </span>
-                    <span className="bg-surface text-muted rounded-full px-2 py-0.5 text-[9px]">
-                      #파워
-                    </span>
-                  </div>
-                  <p className="mb-2 text-xs">
-                    드디어 완등! 🔥 3주 도전 끝에 성공
-                  </p>
-                  <div className="flex gap-3">
-                    <span className="text-muted flex items-center gap-1 text-[10px]">
-                      <Heart
-                        className="h-3.5 w-3.5 fill-[#e8473c]"
-                        strokeWidth={0}
-                      />
-                      156
-                    </span>
-                    <span className="text-muted flex items-center gap-1 text-[10px]">
-                      <MessageCircle className="h-3.5 w-3.5" strokeWidth={2} />
-                      23
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Tab Bar */}
-            <div className="bg-card/95 border-line absolute right-0 bottom-0 left-0 z-40 flex h-12 items-center justify-around border-t px-2 backdrop-blur-xl">
-              <button className="text-accent flex items-center justify-center rounded-xl px-2 py-2">
-                <Home className="h-5 w-5 scale-110" strokeWidth={2.5} />
-              </button>
-              <button className="text-muted flex items-center justify-center rounded-xl px-2 py-2">
-                <MapPin className="h-5 w-5" strokeWidth={2} />
-              </button>
-              <button
-                aria-label="새 영상 업로드"
-                className="-mt-4 flex items-center justify-center rounded-xl px-2 py-2"
-              >
-                <span className="bg-accent flex h-9 w-9 items-center justify-center rounded-full text-white shadow-[0_0_18px_rgba(87,203,96,0.45)]">
-                  <Plus className="h-5 w-5" strokeWidth={2.3} />
-                </span>
-              </button>
-              <button className="text-muted flex items-center justify-center rounded-xl px-2 py-2">
-                <FlagTriangleRight className="h-5 w-5" strokeWidth={2} />
-              </button>
-              <button className="text-muted flex items-center justify-center rounded-xl px-2 py-2">
-                <User className="h-5 w-5" strokeWidth={2} />
-              </button>
-            </div>
+          <div className="border-line relative h-150 w-69 overflow-hidden rounded-[44px] border-[6px] bg-black shadow-[0_32px_80px_rgba(0,0,0,0.45)]">
+            <img
+              src={theme === 'dark' ? '/app-home-dark.jpg' : '/app-home.jpg'}
+              alt="limbing 앱 홈 화면 — 클라이밍 영상 피드"
+              className="h-full w-full object-cover"
+            />
           </div>
         </div>
       </div>
