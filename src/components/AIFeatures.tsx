@@ -1,5 +1,3 @@
-import { Sparkles } from 'lucide-react';
-
 const features = [
   {
     emoji: '✂️',
@@ -34,17 +32,9 @@ const features = [
   },
 ];
 
-const statusConfig = {
-  Beta: {
-    badge: 'bg-accent/15 text-accent border-accent/30 border',
-    stripe: 'bg-accent',
-    cardBorder: 'border-accent/20',
-  },
-  Coming: {
-    badge: 'bg-accent-lime/10 text-accent-lime border-accent-lime/30 border',
-    stripe: 'bg-accent-lime',
-    cardBorder: 'border-accent-lime/15',
-  },
+const statusBadge = {
+  Beta: 'bg-accent/12 text-accent',
+  Coming: 'bg-surface text-muted',
 };
 
 export function AIFeatures() {
@@ -52,69 +42,54 @@ export function AIFeatures() {
     <section className="flex min-h-[calc(100svh-4rem)] flex-col justify-center px-6 py-16">
       <div className="mx-auto w-full max-w-6xl">
         {/* Header */}
-        <div className="mb-12 text-center">
-          <div className="border-accent-lime/40 bg-accent-lime/10 text-accent-lime mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold">
-            <Sparkles className="h-3.5 w-3.5" />
-            AI 기능
-          </div>
-          <h2 className="text-3xl font-black tracking-tight md:text-5xl">
-            <span className="text-muted/60">영상 하나로</span>
+        <div className="mb-14 text-center">
+          <p className="text-accent mb-3 text-base font-semibold">AI 기능</p>
+          <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
+            영상 하나로,
             <br />
-            <span className="text-accent">AI</span>와 함께{' '}
-            <span className="text-accent">성장</span>해요
+            AI와 함께 성장해요
           </h2>
         </div>
 
         {/* Feature grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {features.map((f, i) => {
-            const cfg = statusConfig[f.status];
-            return (
-              <div
-                key={i}
-                className={`bg-card ${cfg.cardBorder} group flex overflow-hidden rounded-2xl border transition-transform hover:-translate-y-1`}
-              >
-                {/* Left accent stripe */}
-                <div className={`w-1 shrink-0 ${cfg.stripe} opacity-60`} />
-
-                <div className="flex flex-1 flex-col p-6">
-                  {/* Top row: emoji + status */}
-                  <div className="mb-4 flex items-start justify-between">
-                    <div className="bg-surface flex h-12 w-12 items-center justify-center rounded-xl text-2xl">
-                      {f.emoji}
-                    </div>
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-bold ${cfg.badge}`}
-                    >
-                      {f.status}
-                    </span>
-                  </div>
-
-                  {/* Title & description */}
-                  <h3 className="mb-2 text-lg font-bold">{f.title}</h3>
-                  <p className="text-muted mb-4 flex-1 text-sm leading-relaxed">
-                    {f.description}
-                  </p>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {f.tags.map(tag => (
-                      <span
-                        key={tag}
-                        className="bg-surface border-line text-muted rounded-full border px-2.5 py-1 text-xs"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {features.map((f, i) => (
+            <div key={i} className="bg-card shadow-card flex flex-col rounded-3xl p-8">
+              {/* Top row: emoji + status */}
+              <div className="mb-5 flex items-start justify-between">
+                <span className="text-3xl">{f.emoji}</span>
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-semibold ${statusBadge[f.status]}`}
+                >
+                  {f.status}
+                </span>
               </div>
-            );
-          })}
+
+              {/* Title & description */}
+              <h3 className="mb-2 text-lg font-semibold tracking-tight">
+                {f.title}
+              </h3>
+              <p className="text-muted mb-5 flex-1 text-sm leading-relaxed">
+                {f.description}
+              </p>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1.5">
+                {f.tags.map(tag => (
+                  <span
+                    key={tag}
+                    className="bg-surface text-muted rounded-full px-2.5 py-1 text-xs"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Bottom note */}
-        <p className="text-muted mt-8 text-center text-sm">
+        <p className="text-muted mt-10 text-center text-sm">
           Beta 기능은 출시 후 바로 사용 가능 · Coming 기능은 순차 도입 예정
         </p>
       </div>
