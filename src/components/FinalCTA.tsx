@@ -124,6 +124,13 @@ export function FinalCTA() {
           >
             gooddynoteam@gmail.com
           </a>
+          <br />
+          <a
+            href="/privacy/"
+            className="hover:text-ink mt-2 inline-block transition-colors"
+          >
+            개인정보처리방침
+          </a>
         </div>
       </div>
     </section>
