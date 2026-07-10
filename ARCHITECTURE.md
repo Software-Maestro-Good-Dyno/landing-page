@@ -99,11 +99,15 @@ src/
 
 ```
 다크 모드 (기본)         라이트 모드
---color-bg: #0d0d0d     #f4f7f2
---color-accent: #4a7c59 (공통)
+--color-bg: #000000     #f2f2f7
+--color-accent: #95bb72 (공통, 앱 primary green)
 --color-accent-lime     라이트에서 진하게 오버라이드
 --color-accent-yellow   라이트에서 진하게 오버라이드
 ```
+
+### 폰트
+
+Pretendard Variable을 다이나믹 서브셋 방식으로 사용한다. `index.html`에서 jsDelivr CDN CSS를 로드하고, `global.css`의 `--font-sans`에 폰트 스택을 정의한다. 페이지에 실제 쓰인 글자가 속한 조각만 다운로드된다.
 
 ### 스크롤
 
