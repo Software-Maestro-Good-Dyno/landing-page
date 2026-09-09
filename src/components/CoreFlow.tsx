@@ -6,7 +6,7 @@ const steps = [
     icon: <Upload className="h-6 w-6" strokeWidth={1.8} />,
     title: '영상을 올린다',
     description:
-      '클라이밍 영상을 업로드하세요. Limbing에서 빠르고 쉽게 편집할 수 있어요.',
+      '클라이밍 영상을 업로드하세요. ClimPick에서 빠르고 쉽게 편집할 수 있어요.',
   },
   {
     step: '2',

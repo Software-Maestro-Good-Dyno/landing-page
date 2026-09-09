@@ -47,7 +47,7 @@ export function Hero() {
           <div className="border-line relative h-150 w-69 overflow-hidden rounded-[44px] border-[6px] bg-black shadow-[0_32px_80px_rgba(0,0,0,0.45)]">
             <img
               src={theme === 'dark' ? '/app-home-dark.jpg' : '/app-home.jpg'}
-              alt="limbing 앱 홈 화면 — 클라이밍 영상 피드"
+              alt="ClimPick 앱 홈 화면 — 클라이밍 영상 피드"
               className="h-full w-full object-cover"
             />
           </div>

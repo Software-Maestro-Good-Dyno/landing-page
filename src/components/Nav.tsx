@@ -14,9 +14,7 @@ export function Nav() {
           }
           className="flex items-center gap-2.5"
         >
-          <span className="text-accent text-xl font-black tracking-wider">
-            LIMBING
-          </span>
+          <span className="text-accent text-xl font-black">ClimPick</span>
         </button>
 
         <div className="text-muted hidden items-center gap-8 text-sm font-medium md:flex">
