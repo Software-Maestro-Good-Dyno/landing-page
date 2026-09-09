@@ -120,6 +120,7 @@ Pretendard Variable을 다이나믹 서브셋 방식으로 사용한다. `index.
 | Formspree                 | 이메일 수집 (FinalCTA)         |
 | Google Forms              | 유저 리서치 설문 (SocialProof) |
 | Google Analytics (`gtag`) | 이메일 신청 완료 이벤트 트래킹 |
+| Vercel                    | 호스팅 및 배포                 |
 
 ## 7. 디자인 방향
 
