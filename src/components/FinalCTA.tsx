@@ -105,13 +105,22 @@ export function FinalCTA() {
                 )}
                 {!hasError && (
                   <p className="text-muted mt-4 text-sm">
-                    스팸 없이 출시 소식만 보내드려요. 제출하시면{' '}
-                    <a href="/privacy/" className="hover:text-ink underline">
-                      개인정보처리방침
-                    </a>
-                    에 따라 이메일 주소가 처리됩니다.
+                    스팸 없이 출시 소식만 보내드려요.
                   </p>
                 )}
+                <p className="text-muted mt-2 text-sm">
+                  제출하시면{' '}
+                  <a
+                    href="/privacy/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-ink underline"
+                  >
+                    개인정보처리방침
+                  </a>
+                  에 따라 이메일 주소가 처리되며, 만 14세 미만은 신청할 수
+                  없어요.
+                </p>
               </form>
             )}
           </div>
