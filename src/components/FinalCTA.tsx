@@ -31,7 +31,7 @@ export function FinalCTA() {
         setIsSubmitted(true);
         window.gtag?.('event', 'sign_up_success', {
           event_category: 'engagement',
-          event_label: 'Limbing 사전예약 알림신청',
+          event_label: 'ClimPick 사전예약 알림신청',
         });
       } else {
         setHasError(true);
@@ -53,9 +53,7 @@ export function FinalCTA() {
           <div className="relative">
             {/* Logo */}
             <div className="mb-8 flex items-center justify-center">
-              <span className="text-accent text-2xl font-black tracking-wide">
-                LIMBING
-              </span>
+              <span className="text-accent text-2xl font-black">ClimPick</span>
             </div>
 
             <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
@@ -64,7 +62,7 @@ export function FinalCTA() {
               알려드릴게요
             </h2>
             <p className="text-muted mb-8 text-lg leading-relaxed">
-              이메일을 남겨주시면 Limbing 출시 소식을
+              이메일을 남겨주시면 ClimPick 출시 소식을
               <br />
               가장 먼저 받아보실 수 있어요.
             </p>
@@ -110,6 +108,19 @@ export function FinalCTA() {
                     스팸 없이 출시 소식만 보내드려요.
                   </p>
                 )}
+                <p className="text-muted mt-2 text-sm">
+                  제출하시면{' '}
+                  <a
+                    href="/privacy/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-ink underline"
+                  >
+                    개인정보처리방침
+                  </a>
+                  에 따라 이메일 주소가 처리되며, 만 14세 미만은 신청할 수
+                  없어요.
+                </p>
               </form>
             )}
           </div>
