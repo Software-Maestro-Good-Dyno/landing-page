@@ -4,6 +4,8 @@
 
 클라이밍 영상을 암장·섹터·난이도 기준으로 태깅하고, 같은 문제를 푼 사람들의 영상을 한눈에 모아볼 수 있는 서비스 ClimPick의 출시 전 이메일 수집 및 유저 리서치를 목적으로 합니다.
 
+> **더 이상 서비스하지 않는 페이지입니다.** 배포 도메인 `limbing.kr`은 `vercel.json`의 리다이렉트로 모든 요청을 `climpick.com`으로 보냅니다(`/privacy`는 `climpick.com/privacy`로, 나머지는 첫 화면으로, 301). 현재 랜딩페이지와 개인정보처리방침은 [climpick-landing](https://github.com/Software-Maestro-Good-Dyno/climpick-landing) 레포에서 관리합니다.
+
 ## 기술 스택
 
 | 항목 | 버전 |
